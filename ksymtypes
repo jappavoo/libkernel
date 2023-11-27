@@ -1,0 +1,9 @@
+#!/bin/bash
+sysmap=/boot/System.map-$(uname -r)
+kallsyms=/proc/kallsyms
+
+echo "from $sysmap"
+sudo cut -d' ' -f2 $sysmap | sort | uniq
+
+echo "from $kallsyms"
+sudo cut -d' ' -f2 $kallsyms | sort | uniqw

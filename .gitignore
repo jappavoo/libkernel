@@ -50,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+#emacs backupfiles
+*~
+
+# externals
+ext/
+!ext/README.md

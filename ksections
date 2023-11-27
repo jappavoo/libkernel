@@ -1,0 +1,9 @@
+#!/bin/bash
+VMLINUX=${1:-vmlinux}
+
+readelf -S -W $VMLINUX | grep '^  \[[[:space:]]*[0-9]*\]' | while IFS=[] read p nr rest; do
+    #echo $nr
+    echo $rest | while read name type address offset size es flg lk inf al; do
+	 echo .k$name $address
+    done
+done

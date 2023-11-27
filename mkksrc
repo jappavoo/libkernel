@@ -1,0 +1,14 @@
+#!/bin/bash
+KSYMS=${KSYMS:-/proc/kallsyms}
+ksrc=$1
+shift
+
+for sym in $@; do
+sudo grep " $sym\$" $KSYMS | while read a t n;
+do
+    cat <<EOF
+    .global $n
+    .set $n, 0x$a
+EOF
+done
+done  >> $ksrc
