@@ -36,4 +36,6 @@ __attribute__((weak)) void weak_w_text(void);
 // type W
 __attribute__((weak)) void weak_W_text(void) {}
 
-int main(){ weak_w_text(); weak_W_text(); }
+__thread int tint;
+
+int main(){ tint = 0xdeadbeef; weak_w_text(); weak_W_text(); }

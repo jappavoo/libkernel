@@ -7,7 +7,7 @@ SYSMAP=/boot/System.map-${KERNELRELEASE}
 KALLSYMS=/proc/kallsyms
 KTEXTADDR=$(shell sudo grep " _text$$" ${KALLSYMS} | while read a t n; do echo $$a; done)
 KSYMS=printk ksys_write
-
+KTSSSYMS=current_task
 
 ELFSYMTOOLREPO=git@github.com:jappavoo/elfsymtool.git
 .PHONY: all clean dist-clean
@@ -29,14 +29,21 @@ all: ${externals} ${targets}
 testlibkernel: testlibkernel.c libkernel.so
 	gcc -o $@ $< -L./ -lkernel
 
+kerneltss.s:
+	-rm -rf $(wildcard $@)
+	$(shell ./mkktss $@ ${KTSSSYMS})
+
+kerneltss.o: kerneltss.s
+	gcc -c $< -o $@
+
 kernel.s:
-	-rm -rf $(wildcard$@)
+	-rm -rf $(wildcard $@)
 	$(shell ./mkksrc $@ ${KSYMS})
 
 kernel.o: kernel.s
 	gcc -c $< -o $@
 
-libkernel.so: kernel.o
+libkernel.so: kernel.o kerneltss.o
 	gcc -nostdlib -nodefaultlibs -shared ${KLDFLAGS} -o $@ $^
 
 mysyms.o: mysyms.s
